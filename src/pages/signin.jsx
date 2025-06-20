@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux'; 
+import { loginSuccessful } from '../redux/user/userSlice';
+import { useNavigate } from 'react-router-dom'; // ✅ added
 
 const Signin = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate(); 
+
+  const currentUser = useSelector((state) => state.user.currentUser);
+
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -19,12 +27,27 @@ const Signin = () => {
   const handleSignin = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/auth/signin', formData);
-      console.log(response.data);
-      setMessage(response.data.message || 'Login successful');
-      setFormData({ email: '', password: '' }); 
+      const response = await axios.post('http://localhost:5000/auth/signin', formData, {
+        withCredentials: true 
+      });
+
+      console.log(" FULL RESPONSE:", response);
+      console.log(" DATA ONLY:", response.data);
+
+      if (response.data && response.data.user) {
+        dispatch(loginSuccessful(response.data.user));
+        setMessage("User logged in successfully");
+
+        // to homepage
+        navigate("/");
+      } else {
+        console.warn("No user found in response");
+        setMessage("Login success, but no user data received");
+      }
+
+      setFormData({ email: '', password: '' });
     } catch (err) {
-      console.log('Error signing in:', err.response?.data?.message || err.message);
+      console.error('Error signing in:', err.response?.data || err.message);
       setMessage(err.response?.data?.message || 'Login failed');
     }
   };
@@ -37,6 +60,12 @@ const Signin = () => {
         {message && (
           <div className="mb-4 text-center text-red-600 font-semibold">
             {message}
+          </div>
+        )}
+
+        {currentUser && (
+          <div className="mb-4 text-center text-green-600">
+            Logged in as: <strong>{currentUser.username}</strong>
           </div>
         )}
 

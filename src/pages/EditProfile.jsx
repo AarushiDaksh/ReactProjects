@@ -7,7 +7,7 @@ export const EditProfile = () => {
 
   return (
     <div>
-      <h2>Edit Profile</h2>
+      <h2 >Edit Profile</h2>
       <h3>Welcome, {currentUser?.name || "Guest"}!</h3>
     </div>
   );
