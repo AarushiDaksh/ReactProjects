@@ -3,7 +3,7 @@ import React from "react";
 const HomePage = () => {
   return (
     <div className="min-h-screen font-serif">
-      {/* ✅ Medium-style Navbar */}
+    
       <nav className="flex justify-between items-center px-10 py-5 border-b border-gray-300">
         <h1 className="text-2xl font-bold tracking-tight">Medium</h1>
         <div className="flex gap-6 items-center text-sm font-medium text-gray-700">

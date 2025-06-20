@@ -22,7 +22,7 @@ const Signin = () => {
       const response = await axios.post('http://localhost:5000/auth/signin', formData);
       console.log(response.data);
       setMessage(response.data.message || 'Login successful');
-      setFormData({ email: '', password: '' }); // reset form
+      setFormData({ email: '', password: '' }); 
     } catch (err) {
       console.log('Error signing in:', err.response?.data?.message || err.message);
       setMessage(err.response?.data?.message || 'Login failed');

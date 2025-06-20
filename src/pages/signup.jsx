@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import axios from 'axios'; 
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -21,9 +24,20 @@ const Signup = () => {
     event.preventDefault();
     try {
       const response = await axios.post('http://localhost:5000/auth/signup', formData);
-      console.log(response.data); 
+      console.log('Signup Success:', response.data);
+
+      if (response.data.newUser) {
+        setMessage('Signup successful! Redirecting...');
+        setTimeout(() => {
+          navigate('/signin'); // navigate to Signin page
+        }, 1000);
+      } else {
+        setMessage('User already exists or other issue.');
+      }
+
     } catch (err) {
       console.log('Error signing up:', err.response?.data?.message || err.message);
+      setMessage('Signup failed. Please try again.');
     }
   };
 
@@ -33,13 +47,12 @@ const Signup = () => {
         <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
 
         {message && (
-          <div className="mb-4 text-center text-white font-semibold">
+          <div className="mb-4 text-center text-red-600 font-semibold">
             {message}
           </div>
         )}
 
-       <form onSubmit={handleSignup} className="space-y-4">
-
+        <form onSubmit={handleSignup} className="space-y-4">
           <input
             type="text"
             name="username"
