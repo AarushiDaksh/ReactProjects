@@ -10,16 +10,15 @@ dotenv.config();
 const app = express();
 
 
-app.use(cors({
-  origin: 'http://localhost:5173', 
+const corsOptions = {
+  origin: "http://localhost:5173",
   credentials: true
-}));
+};
+app.use(cors(corsOptions));
+
 app.use(express.json());
-app.use(cookieParser()); 
-const corsOption={
-  origin:["http://localhost:5173"],
-  credentials:true,
-}
+app.use(cookieParser());
+
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("Connected to DB"))
@@ -27,7 +26,6 @@ mongoose.connect(process.env.MONGO_URI)
 
 
 app.use("/auth", AuthRouter);
-
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
