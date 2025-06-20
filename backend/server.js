@@ -1,34 +1,35 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const mongoose = require("mongoose")
-dotenv.config()
-const AuthRouter = require("./routes/Auth.routes")
+const mongoose = require("mongoose");
 const cors = require("cors");
+const cookieParser = require("cookie-parser"); 
+const AuthRouter = require("./routes/Auth.routes");
+
+dotenv.config();
+
 const app = express();
 
-// middleware
 
 app.use(cors({
-  origin: 'http://localhost:5173', // or '*' for public APIs
+  origin: 'http://localhost:5173', 
   credentials: true
 }));
 app.use(express.json());
+app.use(cookieParser()); 
+const corsOption={
+  origin:["http://localhost:5173"],
+  credentials:true,
+}
 
-// connect to db
-
-mongoose.connect(process.env.MONGO_URI).then(() => {
-    console.log("Connected to DB")
-}).catch(err => console.log("Error connecting to db", err))
-
-// api endpoint
-
-// app.get("/", (req, res) => {
-//     return res.status(200).json({message : "Hello! from Backend."})
-// })
-
-app.use("/auth", AuthRouter)
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("Connected to DB"))
+  .catch(err => console.log("Error connecting to db", err));
 
 
-app.listen(process.env.PORT, () => {
-    console.log(`Server is running on port ${process.env.PORT}`)
-})
+app.use("/auth", AuthRouter);
+
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
