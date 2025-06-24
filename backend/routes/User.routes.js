@@ -1,9 +1,10 @@
 const express = require("express");
 const { verifyUser } = require("../utlis/verifyUser");
-const { changeUsername } = require("../controllers/User.controller");
+const { changeUsername , deleteUser} = require("../controllers/User.controller");
 
 const router = express.Router();
 
 router.patch("/editusername", verifyUser, changeUsername);
+router.delete("/delete", verifyUser, deleteUser);
 
 module.exports = router;
