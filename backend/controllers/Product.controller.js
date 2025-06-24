@@ -62,9 +62,23 @@ const purchaseProduct = async (req, res) => {
       order: newOrder,
     });
   } catch (err) {
-    console.error("Error purchasing product:", err.message); // Use err.message
+    console.log.error("Error purchasing product:", err.message); // Use err.message
     return res.status(500).json({ message: "Internal Server Error", error: err.message });
   }
 };
 
-module.exports = { insertProducts, purchaseProduct };
+//get purchase
+const getUserOrders=async(req,res)=>{
+  try{
+    const {userId}=req.params;
+    const orders = await Order.find({user:userId}).populate("products.product").populate("user","username email")
+    return res.status(200).json({message:"Order history Success",orders})
+    
+
+  }catch(err){
+    console.log.error("Error getting user orders:", err);
+    return res.status(500).json({message:"Internal Server Error",err}) // Use err.message
+  }
+}
+
+module.exports = { insertProducts, purchaseProduct ,getUserOrders };
