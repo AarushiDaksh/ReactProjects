@@ -80,5 +80,75 @@ const getUserOrders=async(req,res)=>{
     return res.status(500).json({message:"Internal Server Error",err}) // Use err.message
   }
 }
+//name
+const searchProducts = async (req, res) => {
+  try {
+    const { searchTerm, sortBy, order } = req.query;
 
-module.exports = { insertProducts, purchaseProduct ,getUserOrders };
+    const filter = {};
+    if (searchTerm) {
+      filter.name = { $regex: searchTerm, $options: "i" };
+    }
+
+    const sortOrder = order === "desc" ? 1 : -1;
+    const sortCriteria = {};
+    if (["price", "stock"].includes(sortBy)) {
+      sortCriteria[sortBy] = sortOrder;
+    }
+
+    
+    const pipeline = [
+      { 
+        $match: filter 
+      },
+      {
+        $project: {
+          name: 1,
+          price: 1,
+          // stock: 1
+        }
+      },
+      { 
+        $sort: sortCriteria 
+      }
+    ];
+    
+
+
+    const products = await Product.aggregate(pipeline);
+
+    return res.status(200).json({
+      message: "Search successful",
+      products,
+    });
+  } catch (err) {
+    console.error("Error searching products:", err);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: err.message,
+    });
+  }
+};
+
+//description
+
+
+// const searchProducts = async (req, res) => {
+//   try {
+//     const { searchTerm } = req.query;
+//     const filter = {};
+
+//     if (searchTerm) {
+//       filter.description = { $regex: searchTerm, $options: "i" };
+//     }
+
+//     const products = await Product.find(filter);
+//     return res.status(200).json({ message: "Search successful", products });
+//   } catch (err) {
+//     console.error("Error searching products:", err);
+//     return res.status(500).json({ message: "Internal Server Error", error: err.message });
+//   }
+// };
+
+
+module.exports = { insertProducts, purchaseProduct ,getUserOrders,searchProducts };
