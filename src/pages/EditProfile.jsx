@@ -16,7 +16,7 @@ const EditProfile = () => {
   const updateUsername = async () => {
     try {
       const res = await axios.patch(
-        'http://localhost:5000/User/editusername',
+        'https://react-projects-three-beta.vercel.app/User/editusername',
         { username },
         { withCredentials: true }
       );
