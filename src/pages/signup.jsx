@@ -23,7 +23,7 @@ const Signup = () => {
   const handleSignup = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('https://react-projects-three-beta.vercel.app//auth/signup', formData);
+      const response = await axios.post('https://react-projects-three-beta.vercel.app/auth/signup', formData);
       console.log('Signup Success:', response.data);
 
       if (response.data.newUser) {
