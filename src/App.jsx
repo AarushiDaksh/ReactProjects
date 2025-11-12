@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import './App.css';
 
 
-import { EditProfile } from './pages/EditProfile';
+import EditProfile  from './pages/EditProfile';
 import Home from './pages/Home';
 import Signup from './pages/signup'; 
 import Signin from './pages/signin';
